@@ -1,20 +1,16 @@
 {
-  "name": "zookeepr",
+  "name": "main",
   "version": "1.0.0",
-  "description": "11 | express.js",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com//escowin/zookeepr.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.1"
   }
 }
