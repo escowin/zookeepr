@@ -7,6 +7,9 @@ const {
 } = require("../lib/animals");
 const { animals } = require("../data/animals.json");
 
+// prevents test from writing to json
+jest.mock('fs');
+
 test("creates an animal obj", () => {
     const animal = createNewAnimal(
         { name: "darlene", id: "jhgdja3ng2"},
