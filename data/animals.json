@@ -108,6 +108,19 @@
         "zany"
       ],
       "id": "10"
+    },
+    {
+      "name": "sen",
+      "species": "snek",
+      "diet": "herbivore",
+      "personalityTraits": [
+        "zany"
+      ],
+      "id": "11"
+    },
+    {
+      "name": "darlene",
+      "id": "jhgdja3ng2"
     }
   ]
 }
