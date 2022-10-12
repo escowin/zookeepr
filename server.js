@@ -56,6 +56,7 @@ app.get("/api/animals", (req, res) => {
   }
   res.json(results);
 });
+
 // get route for specific anaimls
 app.get('/api/animals/:id', (req, res) => {
   const result = findById(req.params.id, animals);
@@ -65,6 +66,15 @@ app.get('/api/animals/:id', (req, res) => {
     res.send(404);
   }
 });
+
+// listengs for post requests. allows for users to add data
+app.post('api/animals', (req, res) => {
+  // req.body | where incoming content will be
+  console.log(req.body);
+  res.json(req.body);
+});
+
+// ** pause at 11.2.4
 
 app.listen(PORT, () => {
   console.log(`api server now on port ${PORT}`);
