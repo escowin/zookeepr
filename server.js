@@ -1,10 +1,19 @@
+const fs = require("fs");
+const path = require("path");
 const { query } = require("express");
 const express = require("express");
 const { animals } = require("./data/animals.json");
+const { create } = require("domain");
 
 const PORT = process.env.PORT || 3001;
 // instantiates the server
 const app = express();
+
+// middleware functions | server needs both methods to accept POST data
+// - express.method, parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+// - express.method, parse incoming json data
+app.use(express.json());
 
 function filterByQuery(query, animalsArray) {
   let personalityTraitArray = [];
@@ -45,8 +54,39 @@ function filterByQuery(query, animalsArray) {
 }
 
 function findById(id, animalsArray) {
-  const result = animalsArray.filter(animal => animal.id === id)[0];
+  const result = animalsArray.filter((animal) => animal.id === id)[0];
   return result;
+}
+
+// logic | accepts post route's req.body & animals array to add new data into
+function createNewAnimal(body, animalsArray) {
+  const animal = body;
+  animalsArray.push(animal);
+  // synchronous version of fs.writeFile doesn't require a callback function. works for small files
+  fs.writeFileSync(
+    path.join(__dirname, "./data/animals.json"),
+    // formatting data | null, prevents editing existing data; 2, creates white space for readability
+    JSON.stringify({ animals: animalsArray }, null, 2)
+  );
+
+  return animal;
+}
+
+// validate user input
+function validateAnimal(animal) {
+  if (!animal.name || typeof animal.name !== 'string') {
+    return false;
+  }
+  if (!animal.species || typeof animal.species !== 'string') {
+    return false;
+  }
+  if (!animal.diet || typeof animal.diet !== 'string') {
+    return false;
+  }
+  if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+    return false
+  }
+  return true;
 }
 
 app.get("/api/animals", (req, res) => {
@@ -58,9 +98,10 @@ app.get("/api/animals", (req, res) => {
 });
 
 // get route for specific anaimls
-app.get('/api/animals/:id', (req, res) => {
+app.get("/api/animals/:id", (req, res) => {
   const result = findById(req.params.id, animals);
   if (result) {
+    // parse response into the json format
     res.json(result);
   } else {
     res.send(404);
@@ -68,13 +109,22 @@ app.get('/api/animals/:id', (req, res) => {
 });
 
 // listengs for post requests. allows for users to add data
-app.post('api/animals', (req, res) => {
+app.post("/api/animals", (req, res) => {
   // req.body | where incoming content will be
-  console.log(req.body);
-  res.json(req.body);
+  // sets id based on what the next index of the array will be. length is always 1 number ahead of last index, which prevents duplicate values (if data is not removed from animals.json)
+  req.body.id = animals.length.toString();
+
+  // if any data in req.body is incorrect, send back 400 error
+  if (!validateAnimal(req.body)) {
+    res.status(400).send('the animal is not properly formatted');
+  } else {
+    // adds animal to animals.json and animals array
+    const animal = createNewAnimal(req.body, animals);
+    res.json(animal);
+  }
 });
 
-// ** pause at 11.2.4
+// ** pause at 11.2.6 | write animal data to json
 
 app.listen(PORT, () => {
   console.log(`api server now on port ${PORT}`);
