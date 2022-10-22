@@ -9,11 +9,13 @@ const PORT = process.env.PORT || 3001;
 // instantiates the server
 const app = express();
 
-// middleware functions | server needs both methods to accept POST data
-// - express.method, parse incoming string or array data
+// express middleware | server needs both methods to accept POST data
+// - method - parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
-// - express.method, parse incoming json data
+// - method - parse incoming json data
 app.use(express.json());
+// - method - provides the /public file path location in the app, and instructs the server to make the .css & .js as available static resources. this allows font-end code to be accessed without the need for specific endpoint creation.
+app.use(express.static('public'));
 
 function filterByQuery(query, animalsArray) {
   let personalityTraitArray = [];
@@ -124,8 +126,12 @@ app.post("/api/animals", (req, res) => {
   }
 });
 
-// ** pause at 11.2.6 | write animal data to json
+// this route gets the index.html to be served from Express server
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
 
+// this route must be last
 app.listen(PORT, () => {
   console.log(`api server now on port ${PORT}`);
 });
