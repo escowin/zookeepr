@@ -10,11 +10,11 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // express middleware | server needs both methods to accept POST data
-// - method - parse incoming string or array data
+// - method.parses incoming string or array data
 app.use(express.urlencoded({ extended: true }));
-// - method - parse incoming json data
+// - method.parses incoming json data
 app.use(express.json());
-// - method - provides the /public file path location in the app, and instructs the server to make the .css & .js as available static resources. this allows font-end code to be accessed without the need for specific endpoint creation.
+// - method.provides the /public file path location in the app, and instructs the server to make the .css & .js as available static resources. this allows font-end code to be accessed without the need for specific endpoint creation.
 app.use(express.static('public'));
 
 function filterByQuery(query, animalsArray) {
@@ -99,7 +99,7 @@ app.get("/api/animals", (req, res) => {
   res.json(results);
 });
 
-// get route for specific anaimls
+// gets route for specific anaimls
 app.get("/api/animals/:id", (req, res) => {
   const result = findById(req.params.id, animals);
   if (result) {
@@ -108,6 +108,16 @@ app.get("/api/animals/:id", (req, res) => {
   } else {
     res.send(404);
   }
+});
+
+// routes to /animals
+app.get("/animals", (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+// this route gets the index.html to be served from Express server
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 // listengs for post requests. allows for users to add data
@@ -126,10 +136,15 @@ app.post("/api/animals", (req, res) => {
   }
 });
 
-// this route gets the index.html to be served from Express server
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/index.html'));
+// routes to /zookeeper
+app.get("/zookeepers", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/zookeepers.html"));
 });
+
+// deals with wildcard routes. this route should come last.
+app.get("*", (req, res) => {
+  res.sendFile(__dirname, './public/index.html')
+})
 
 // this route must be last
 app.listen(PORT, () => {

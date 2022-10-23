@@ -1,30 +1,39 @@
-const $animalForm = document.querySelector('#animals-form');
-const $displayArea = document.querySelector('#display-area');
+const $animalForm = document.querySelector("#animals-form");
+const $displayArea = document.querySelector("#display-area");
 
-const printResults = resultArr => {
+const printResults = (resultArr) => {
   console.log(resultArr);
 
-  const animalHTML = resultArr.map(({ id, name, personalityTraits, species, diet }) => {
-    return `
+  const animalHTML = resultArr.map(
+    ({ id, name, personalityTraits, species, diet }) => {
+      return `
   <div class="col-12 col-md-5 mb-3">
     <div class="card p-3" data-id=${id}>
       <h4 class="text-primary">${name}</h4>
-      <p>Species: ${species.substring(0, 1).toUpperCase() + species.substring(1)}<br/>
+      <p>Species: ${
+        species.substring(0, 1).toUpperCase() + species.substring(1)
+      }<br/>
       Diet: ${diet.substring(0, 1).toUpperCase() + diet.substring(1)}<br/>
       Personality Traits: ${personalityTraits
-        .map(trait => `${trait.substring(0, 1).toUpperCase() + trait.substring(1)}`)
-        .join(', ')}</p>
+        .map(
+          (trait) =>
+            `${trait.substring(0, 1).toUpperCase() + trait.substring(1)}`
+        )
+        .join(", ")}</p>
     </div>
   </div>
     `;
-  });
+    }
+  );
 
-  $displayArea.innerHTML = animalHTML.join('');
+  $displayArea.innerHTML = animalHTML.join("");
 };
 
 const getAnimals = (formData = {}) => {
+  // if nothing is passed into formData
   let queryUrl = '/api/animals?';
 
+  // this one is dependent on handleGetAnimalsSubmit
   Object.entries(formData).forEach(([key, value]) => {
     queryUrl += `${key}=${value}&`;
   });
@@ -33,9 +42,11 @@ const getAnimals = (formData = {}) => {
 
   fetch(queryUrl)
     .then(response => {
+      // must check if ok property is true or false
       if (!response.ok) {
-        return alert('Error: ' + response.statusText);
+        return alert(`error: ${response.statusText}`);
       }
+      // if ok is true, response data is parsed into then json format
       return response.json();
     })
     .then(animalData => {
@@ -44,7 +55,7 @@ const getAnimals = (formData = {}) => {
     });
 };
 
-const handleGetAnimalsSubmit = event => {
+const handleGetAnimalsSubmit = (event) => {
   event.preventDefault();
   const dietRadioHTML = $animalForm.querySelectorAll('[name="diet"]');
   let diet;
@@ -56,23 +67,25 @@ const handleGetAnimalsSubmit = event => {
   }
 
   if (diet === undefined) {
-    diet = '';
+    diet = "";
   }
 
   const personalityTraitArr = [];
-  const selectedTraits = $animalForm.querySelector('[name="personality"').selectedOptions;
+  const selectedTraits = $animalForm.querySelector(
+    '[name="personality"'
+  ).selectedOptions;
 
   for (let i = 0; i < selectedTraits.length; i += 1) {
     personalityTraitArr.push(selectedTraits[i].value);
   }
 
-  const personalityTraits = personalityTraitArr.join(',');
+  const personalityTraits = personalityTraitArr.join(",");
 
   const animalObject = { diet, personalityTraits };
 
   getAnimals(animalObject);
 };
 
-$animalForm.addEventListener('submit', handleGetAnimalsSubmit);
+$animalForm.addEventListener("submit", handleGetAnimalsSubmit);
 
 getAnimals();

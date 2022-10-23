@@ -108,6 +108,51 @@
         "hungry"
       ],
       "id": "10"
+    },
+    {
+      "name": "Larry",
+      "species": "Lemur",
+      "diet": "omnivore",
+      "personalityTraits": [
+        "hungry"
+      ],
+      "id": "11"
+    },
+    {
+      "name": "Harimbe",
+      "species": "Gorilla",
+      "diet": "omnivore",
+      "personalityTraits": [
+        "loving"
+      ],
+      "id": "12"
+    },
+    {
+      "name": "Pegasus",
+      "species": "horse",
+      "diet": "herbivore",
+      "personalityTraits": [
+        "goofy"
+      ],
+      "id": "13"
+    },
+    {
+      "name": "The Minotaur",
+      "species": "chimera",
+      "diet": "herbivore",
+      "personalityTraits": [
+        "anxious"
+      ],
+      "id": "14"
+    },
+    {
+      "name": "Gustav",
+      "species": "Phoenix",
+      "diet": "carnivore",
+      "personalityTraits": [
+        "zany"
+      ],
+      "id": "15"
     }
   ]
 }
