@@ -43,14 +43,15 @@ const getZookeepers = (formData = {}) => {
 
 const handleGetZookeepersSubmit = event => {
   event.preventDefault();
+  // takes in values from zookeeper.html form
   const nameHTML = $zookeeperForm.querySelector('[name="name"]');
   const name = nameHTML.value;
 
   const ageHTML = $zookeeperForm.querySelector('[name="age"]');
   const age = ageHTML.value;
 
+  // passing the values in as an object 
   const zookeeperObject = { name, age };
-
   getZookeepers(zookeeperObject);
 };
 
