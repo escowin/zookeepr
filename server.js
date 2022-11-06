@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const { animals } = require('./data/animals.json');
 
@@ -6,6 +8,14 @@ const PORT = process.env.PORT || 3001;
 
 // instantiates the server
 const app = express();
+
+
+// middleware | .use method tells the express app to intercept POST requests before it gets to the callback function. data will firs tbe run through a couple of functions to take the raw data trasferred over http and convert it to a json object
+// - express.urlencoded method takes incoming POST data, and converts it into key-value pairs that can be accessed in the req.body. extended true option inside the method informs server that there may be sub-array data nested in it as well, so it needs to look deep into the POST data to correctly parse all data.
+app.use(express.urlencoded({ extended: true}));
+// - express.json method takes incoming POST data foratted as json and parses it into the req.body javascript object
+app.use(express.json());
+
 
 // functions
 function filterByQuery(query, animalsArray) {
@@ -43,18 +53,49 @@ function findById(id, animalsArray) {
   return result;
 };
 
-// api routes
-// - get("/route/path", callback function that executes with every get request);
+function createNewAnimal(body, animalsArray) {
+  const animal = body;
+  animalsArray.push(animal);
+  // synchronous .writeFile method | callback not required, works for small files
+  fs.writeFileSync(
+    // methods joins directory of file code is executed in and writes to animals.json in ./data
+    path.join(__dirname, './data/animals.json'),
+    // converts javascript array data into json, null prevents edits to existing data, 2 creates whitespace for code legibility
+    JSON.stringify({ animals: animalsArray }, null, 2)
+  );
+  return animal;
+};
+
+// validation logic | prevents user-submitted null or malicious values
+function validateAnimal(animal) {
+  if (!animal.name || typeof animal.name !== 'string') {
+    return false;
+  }
+  if (!animal.species || typeof animal.species !== 'string') {
+    return false;
+  }
+  if (!animal.diet || typeof animal.diet !== 'string') {
+    return false;
+  }
+  if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+    return false;
+  }
+  return true;
+}
+
+// api get routes | getting data from server: "/path", callback function executes with each request;
 // - req.query | gets all animals that matches the parameters. response parsed in json
 app.get('/api/animals', (req, res) => {
   let results = animals;
+  // if the user searches by filter, the results will be run through query request against animals.json
   if (req.query) {
     results = filterByQuery(req.query, results);
   }
+  // server responds to request with the results parsed in json
   res.json(results);
 });
 
-// - req.params | gets an animal by its id. response parsed in json
+// - req.params.id | gets an animal by its id. response parsed in json
 app.get('/api/animals/:id', (req, res) => {
   const result = findById(req.params.id, animals);
   if (result) {
@@ -62,6 +103,20 @@ app.get('/api/animals/:id', (req, res) => {
   } else {
     res.send(404);
   }
+});
+
+// api post routes | adding data to the server: '/path', callback function
+// - adds an animal object to animal.json
+app.post('/api/animals', (req, res) => {
+  // - sets unqiue id based on what the next index of the array will be. prevents id duplication
+  req.body.id = animals.length.toString();
+
+  // - sends back 400 error if any data in req.body is incorrect **PAUSE 11.2.6
+  // - function adds animal to json file and animals array
+  const animal = createNewAnimal(req.body, animals);
+
+  // - response parses the animal variable into json
+  res.json(animal);
 });
 
 
