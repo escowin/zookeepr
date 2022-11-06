@@ -1,6 +1,9 @@
 const express = require('express');
 const { animals } = require('./data/animals.json');
 
+// port set up for heroku or localhost
+const PORT = process.env.PORT || 3001;
+
 // instantiates the server
 const app = express();
 
@@ -47,6 +50,6 @@ app.get('/api/animals', (req, res) => {
 
 
 // listens for requests
-app.listen(3001, () => {
-  console.log(`API server now on port 3001`);
+app.listen(PORT, () => {
+  console.log(`API server now on port ${PORT}`);
 });
