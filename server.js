@@ -38,18 +38,35 @@ function filterByQuery(query, animalsArray) {
   return filteredResults;
 };
 
-// routes
-// - get method requires 2 arguments | the route the client will fetch as a string; callback function that executes with every get request
+function findById(id, animalsArray) {
+  const result = animalsArray.filter(animal => animal.id === id)[0];
+  return result;
+};
+
+// api routes
+// - get("/route/path", callback function that executes with every get request);
+// - req.query | gets all animals that matches the parameters. response parsed in json
 app.get('/api/animals', (req, res) => {
   let results = animals;
   if (req.query) {
     results = filterByQuery(req.query, results);
   }
   res.json(results);
-})
+});
+
+// - req.params | gets an animal by its id. response parsed in json
+app.get('/api/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
+});
 
 
-// listens for requests
+
+// listens for requests. conventiionally placed at the end, must be placed after app declaration.
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}`);
 });
