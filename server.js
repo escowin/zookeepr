@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 3001;
 // instantiates the server
 const app = express();
 
-
 // middleware | .use method tells the express app to intercept POST requests before it gets to the callback function. data will firs tbe run through a couple of functions to take the raw data trasferred over http and convert it to a json object
 // - express.urlencoded method takes incoming POST data, and converts it into key-value pairs that can be accessed in the req.body. extended true option inside the method informs server that there may be sub-array data nested in it as well, so it needs to look deep into the POST data to correctly parse all data.
 app.use(express.urlencoded({ extended: true}));
@@ -105,8 +104,8 @@ app.get('/api/animals/:id', (req, res) => {
   }
 });
 
-// api post routes | adding data to the server: '/path', callback function
-// - adds an animal object to animal.json
+// api post route | adds an animal object to animal.json
+// - req.body accesses incoming POST data. needed in the endpoint's callback function
 app.post('/api/animals', (req, res) => {
   // - sets unqiue id based on what the next index of the array will be. prevents id duplication
   req.body.id = animals.length.toString();
