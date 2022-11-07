@@ -108,6 +108,16 @@
         "hungry"
       ],
       "id": "10"
+    },
+    {
+      "name": "Icarus",
+      "species": "pegasus",
+      "diet": "omnivore",
+      "personalityTraits": [
+        "hungry",
+        "zany"
+      ],
+      "id": "11"
     }
   ]
 }

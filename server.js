@@ -111,12 +111,15 @@ app.post('/api/animals', (req, res) => {
   // - sets unqiue id based on what the next index of the array will be. prevents id duplication
   req.body.id = animals.length.toString();
 
-  // - sends back 400 error if any data in req.body is incorrect **PAUSE 11.2.6
-  // - function adds animal to json file and animals array
-  const animal = createNewAnimal(req.body, animals);
-
-  // - response parses the animal variable into json
-  res.json(animal);
+  // - sends back 400 error if any data in req.body is incorrect
+  if (!validateAnimal(req.body)) {
+    res.status(400).send('the animal is not properly formatted');
+  } else {
+    // - function adds animal to json file and animals array
+    const animal = createNewAnimal(req.body, animals);
+    // - response parses the animal variable into json
+    res.json(animal);
+  }
 });
 
 
