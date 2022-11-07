@@ -123,9 +123,21 @@ app.post('/api/animals', (req, res) => {
   }
 });
 
-// html get route | res.sendFile responds with the frontend index.html to display in browser.
+// html get routes | res.sendFile responds with the frontend index.html to display in browser; path.join finds the correct location for browser html to ensure app works in any server environment.
+// - loads frontend index.html in browser
 app.get('/', (req, res) => {
-  // - path.join finds the correct location for browser html. ensures app works in any server environment.
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+// - loads frontend animals.html in browser
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+// - loads frontend zookeepers.html
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+// - redirects to index.html for clients making requests to non-existant wild card routes. must be placed last.
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
