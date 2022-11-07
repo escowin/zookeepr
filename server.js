@@ -14,6 +14,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true}));
 // - express.json method takes incoming POST data foratted as json and parses it into the req.body javascript object
 app.use(express.json());
+// - express.static method allows the frontend html to run its scripts by making /public files readily available.
+app.use(express.static('public'));
 
 
 // functions
@@ -121,7 +123,11 @@ app.post('/api/animals', (req, res) => {
   }
 });
 
-
+// html get route | res.sendFile responds with the frontend index.html to display in browser.
+app.get('/', (req, res) => {
+  // - path.join finds the correct location for browser html. ensures app works in any server environment.
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
 
 // listens for requests. conventiionally placed at the end, must be placed after app declaration.
 app.listen(PORT, () => {

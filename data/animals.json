@@ -118,6 +118,25 @@
         "zany"
       ],
       "id": "11"
+    },
+    {
+      "name": "Phillipe",
+      "species": "Dimetrodon",
+      "diet": "carnivore",
+      "personalityTraits": [
+        "goofy"
+      ],
+      "id": "12"
+    },
+    {
+      "name": "Lassie",
+      "species": "african wild dog",
+      "diet": "carnivore",
+      "personalityTraits": [
+        "hungry",
+        "zany"
+      ],
+      "id": "13"
     }
   ]
 }
