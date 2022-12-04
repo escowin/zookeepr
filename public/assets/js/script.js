@@ -1,5 +1,8 @@
-const $animalForm = document.querySelector('#animal-form');
+// data | dom elements
+const $animalForm = document.getElementById('animal-form');
+const $zookeeperForm = document.getElementById('zookeeper-form');
 
+// logic | form input
 const handleAnimalFormSubmit = event => {
   event.preventDefault();
 
@@ -27,7 +30,7 @@ const handleAnimalFormSubmit = event => {
   const animalObject = { name, species, diet, personalityTraits };
 
   // - fetch method:POST | sends frontend animalObject to the backend
-  fetch('/api/animals', { // as a server request, specifying the full url is not needed
+  fetch('api/animals', {
     method: 'POST', // specifying post method required
     headers: {
       Accept: 'application/json', // data type to be sent
@@ -39,7 +42,7 @@ const handleAnimalFormSubmit = event => {
     if (response.ok) {
       return response.json();
     }
-    alert(`Error: ${response.statusText()}`);
+    alert(`Error: ${response.statusText}`);
   })
   .then(postResponse => {
     console.log(postResponse);
@@ -47,4 +50,38 @@ const handleAnimalFormSubmit = event => {
   });
 };
 
+const handleZookeeperFormSubmit = event => {
+  event.preventDefault();
+
+  // organizes form submitted data
+  const name = $zookeeperForm.querySelector('[name="zookeeper-name"]').value;
+  const age = parseInt($zookeeperForm.querySelector('[name="age"]').value);
+  const favoriteAnimal = $zookeeperForm.querySelector('[name="favorite-animal"]').value;
+
+  // consolidates form data variables into an object
+  const zookeeperObj = { name, age, favoriteAnimal };
+  console.log(zookeeperObj);
+
+  // configures fetch req to post method. posts object to ./data/zookeepers.json
+  fetch('api/zookeepers', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(zookeeperObj)
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    alert(`error: ${response.statusText}`);
+  })
+  .then(postResponse => {
+    console.log(`added ${postResponse}`);
+    alert('zookeeper added.');
+  });
+};
+
+$zookeeperForm.addEventListener('submit', handleZookeeperFormSubmit);
 $animalForm.addEventListener('submit', handleAnimalFormSubmit);
